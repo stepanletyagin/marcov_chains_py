@@ -11,3 +11,4 @@ y_min = -50
 y_max = 31
 
 eps = 0.0001
+tau = 0.1  # Interpolation step

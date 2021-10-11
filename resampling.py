@@ -1,3 +1,4 @@
+from config import *
 from series_splitting import series_splitting_index
 import numpy as np
 from scipy.interpolate import interp1d
@@ -7,7 +8,7 @@ import pandas as pd
 def time_resampling(values):
     values = values.T
     idx = series_splitting_index(values['time'])  # values.iloc['time']
-    tau = 0.1  # Interpolation step
+    # tau = 0.1  # Interpolation step
     series_inter = pd.DataFrame(columns=values.columns)
     temp_series_inter = pd.DataFrame(columns=values.columns)
 
