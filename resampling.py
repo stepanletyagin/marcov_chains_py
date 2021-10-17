@@ -8,7 +8,6 @@ import pandas as pd
 def time_resampling(values):
     values = values.T
     idx = series_splitting_index(values['time'])  # values.iloc['time']
-    # tau = 0.1  # Interpolation step
     series_inter = pd.DataFrame(columns=values.columns)
     temp_series_inter = pd.DataFrame(columns=values.columns)
 
@@ -19,12 +18,17 @@ def time_resampling(values):
         interp_time = np.arange(min(temp_series['time']), max(temp_series['time']), tau)
 
         columns = list(temp_series)
-        for k in columns:
-            f = interp1d(temp_series['time'], temp_series[k])
-            temp_series_inter[k] = f(interp_time)
+        if len(interp_time) % 2 == 0:
+            for k in columns:
+                f = interp1d(temp_series['time'], temp_series[k])
+                temp_series_inter[k] = f(interp_time)
+        else:
+            for k in columns:
+                f = interp1d(temp_series['time'], temp_series[k])  # Because fit and GPR works only for same dimensions
+                temp_series_inter[k] = f(interp_time[:-1])
 
-        # The python interp1d doesn't have query points in itself,
-        # but instead creates a function which you then use to get your new data points
+                # The python interp1d doesn't have query points in itself,
+                # but instead creates a function which you then use to get your new data points
 
         series_inter = pd.concat([series_inter, temp_series_inter], ignore_index=True)
         temp_series_inter = temp_series_inter.iloc[0:0]     # Clear temp DataFrame
