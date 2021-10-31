@@ -1,20 +1,17 @@
 import numpy as np
-import pandas as pd
-from output import df_to_excel
-from config import *
 
 
-def gauss_data(series):
+def gauss_data(series, data1, data2):
     series_l = len(series)
 
-    angle_knee = series.loc[0:series_l, 'angle_knee']
-    angle_hip = series.loc[0:series_l, 'angle_hip']
+    eval_param1 = series.loc[0:series_l, data1]  # Getting evaluation parameters
+    eval_param2 = series.loc[0:series_l, data2]
     time = series.loc[0:series_l, 'time']
 
-    t_set = np.asarray([angle_knee, angle_hip]).T
-    # t_set = np.asarray(angle_knee).T
-    # time = np.atleast_2d(np.arange(0, len(series) * tau, tau)).T
+    training_set = np.asarray([eval_param1.iloc[::2], eval_param2.iloc[::2]]).T  # Even indexes for training set
+    test_set = np.asarray([eval_param1.iloc[1::2], eval_param2.iloc[1::2]]).T    # Odd indexes for training set
+
+    data_set = np.asarray([eval_param1, eval_param2]).T
     t_time = np.asarray(time).T
 
-    return t_set, t_time
-
+    return data_set, training_set, test_set, t_time

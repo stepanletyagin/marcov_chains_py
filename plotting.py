@@ -1,4 +1,3 @@
-from pylab import *
 import matplotlib.pyplot as plt
 
 
@@ -33,29 +32,51 @@ def hist(data1, data2):
     fig.savefig('hist_plot.jpg')
 
 
-def gpp_plot(t_time, t_set, pr_time, pr_vals, series_num):
+def gpp_plot(t_time, t_set, pr_time, pr_vals, series_num, error, movement_type):
     fig = plt.figure(num=1, figsize=(30, 20), dpi=300, facecolor='w', edgecolor='k')
     ax = fig.add_subplot()
-    ax.set_title('series #' + str(series_num), fontsize=50)
+    ax.set_title('series #' + str(series_num) + ', std = ' + str(error), fontsize=40)
     ax.plot(t_time, t_set[:, 0], 'r-', markersize=5, label=u'Observation')
     ax.plot(pr_time, pr_vals[:, 0], 'b-', linewidth=1, label=u'Prediction')
     ax.legend(loc='upper right', fontsize=15)
     ax.grid()
-    plt.savefig('/Users/stepanletyagin/Desktop/BMSTU/6_semestr/Coursework/python_code/plots/GPP_plot_' + str(series_num) + '.jpg')
+    plt.savefig('/Users/stepanletyagin/Desktop/BMSTU/6_semestr/Coursework/python_code/plots/'
+                + movement_type + '/GPP_plot_' + str(series_num) + '.jpg')
     plt.cla()
     plt.clf()
     plt.close(fig)
 
 
-def gpp_dot_plot(t_set, pr_vals):
+def gpp_dot_plot(t_set, pr_vals, movement_type):
     fig = plt.figure(num=1, figsize=(30, 20), dpi=300, facecolor='w', edgecolor='k')
-    plt.plot(t_set[:, 0], t_set[:, 1], 'r.', markersize=5, label=u'Observation')
-    plt.plot(pr_vals[:, 0], pr_vals[:, 1], 'b.', linewidth=1, label=u'Prediction')
+    ax = fig.add_subplot()
+    ax.set_title(movement_type, fontsize=30)
+    ax.plot(t_set[:, 0], t_set[:, 1], 'b.', markersize=5, label=u'Observation')
+    ax.plot(pr_vals[:, 0], pr_vals[:, 1], 'r.', linewidth=1, label=u'Prediction')
     # plt.fill_between(x[:, 0], y[:, 0] - 1.96 * sigma, y[:, 0] + 1.96 * sigma, alpha=0.2, color='k',
     #                  label=u'95% confidence interval')
-    plt.legend(loc='upper right', fontsize=10)
-    plt.xlim(0, 60)
-    plt.ylim(-50, 100)
+    ax.legend(loc='upper right', fontsize=10)
+    # plt.xlim(0, 60)
+    # plt.ylim(-50, 100)
     plt.grid()
-    # plt.show()
-    fig.savefig('/Users/stepanletyagin/Desktop/BMSTU/6_semestr/Coursework/python_code/plots/GPP_dot_plot.jpg')
+    fig.savefig('/Users/stepanletyagin/Desktop/BMSTU/6_semestr/Coursework/python_code/plots/'
+                + movement_type + '/GPP_dot_plot.jpg')
+
+
+def gpp_series_plot(experiment, prediction, time, series_borders, error, movement_type, eval_parameter):
+    for i in range(0, len(series_borders) - 1):  # Number of series
+        fig = plt.figure(num=1, figsize=(30, 20), dpi=300, facecolor='w', edgecolor='k')
+        ax = fig.add_subplot()
+        fig.suptitle(eval_parameter, y=1.2, fontsize=30)
+        ax.set_title('series #' + str(i) + ', std = ' + str(error[i]), fontsize=20)
+        ax.plot(time[series_borders[i]:series_borders[i + 1]], experiment[series_borders[i]:series_borders[i + 1]],
+                'r-', markersize=5, label=u'Observation')
+        ax.plot(time[series_borders[i]:series_borders[i + 1]], prediction[series_borders[i]:series_borders[i + 1]],
+                'b-', linewidth=1, label=u'Prediction')
+        ax.legend(loc='upper right', fontsize=15)
+        ax.grid()
+        plt.savefig('/Users/stepanletyagin/Desktop/BMSTU/6_semestr/Coursework/python_code/plots/'
+                    + movement_type + '/' + eval_parameter + '/GPP_plot_' + str(i) + '.jpg')
+        plt.cla()
+        plt.clf()
+        plt.close(fig)

@@ -1,7 +1,10 @@
 
 
 file = 'data.mat'
-movement_type = 'Walking'
+movement_type = 'Squat'
+
+param1 = 'angle_knee'
+param2 = 'angle_hip'
 
 x_points = 98
 y_points = 91
