@@ -1,17 +1,40 @@
 import numpy as np
+from config import *
 
 
-def gauss_data(series, data1, data2):
-    series_l = len(series)
+def gauss_data_spl(series):
+    series_l = len(series)                                      # length of temp series
+    train_set_l = int(series_l * test_sample)                   # length of train set
+    axis0_train_size = int(g_window * 2 + 2)                    # number of columns of training set
+    axis1_train_size = train_set_l - g_window                   # number of rows of training set
 
-    eval_param1 = series.loc[0:series_l, data1]  # Getting evaluation parameters
-    eval_param2 = series.loc[0:series_l, data2]
-    time = series.loc[0:series_l, 'time']
+    # Recording knee hip joint values in trainig set
+    gauss_data = np.empty((axis1_train_size, axis0_train_size), dtype=float)
+    train_param1 = np.asarray(series.loc[0:train_set_l, g_param1]).T
+    train_param2 = np.asarray(series.loc[0:train_set_l, g_param2]).T
 
-    training_set = np.asarray([eval_param1.iloc[::2], eval_param2.iloc[::2]]).T  # Even indexes for training set
-    test_set = np.asarray([eval_param1.iloc[1::2], eval_param2.iloc[1::2]]).T    # Odd indexes for training set
+    for i in range(0, axis1_train_size):
+        gauss_data[i, ::2] = train_param1[i:(i + g_window + 1)]   # even values for knee angle
+        gauss_data[i, 1::2] = train_param2[i:(i + g_window + 1)]  # odd values for hip angle
 
-    data_set = np.asarray([eval_param1, eval_param2]).T
-    t_time = np.asarray(time).T
+    # Recording knee hip joint values in validation set
+    axis0_test_size = int(g_window * 2)
+    axis1_test_size = (series_l - train_set_l) - g_window         # test set size
+    # axis1_test_size = int(series_l - series_l * test_sample)
 
-    return data_set, training_set, test_set, t_time
+    test_set = np.empty((axis1_test_size, axis0_test_size), dtype=float)
+    test_param1 = series.loc[int(series_l * test_sample + 1):series_l, g_param1]
+    test_param2 = series.loc[int(series_l * test_sample + 1):series_l, g_param2]
+
+    for i in range(0, axis1_test_size):
+        test_set[i, ::2] = test_param1[i:(i + g_window)]
+        test_set[i, 1::2] = test_param2[i:(i + g_window)]
+
+    train_set = gauss_data[:, 0:g_window * 2]
+    val_set = gauss_data[:, g_window * 2:axis0_train_size]
+
+    # time = np.asarray(series.loc[0:series_l, 'time'])
+    # test_time_start = series_l - len(test_set)
+    # test_time = time[test_time_start - 1:series_l - 1]
+
+    return train_set, val_set, test_set

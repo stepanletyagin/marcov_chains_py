@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
-
+from config import *
+from numpy import asarray
 
 def dot_plot(data1, data2, movement_type):
     fig, ax = plt.subplots(figsize=(30, 20))
@@ -73,6 +74,31 @@ def gpp_series_plot(experiment, prediction, time, series_borders, error, movemen
                 'r-', markersize=5, label=u'Observation')
         ax.plot(time[series_borders[i]:series_borders[i + 1]], prediction[series_borders[i]:series_borders[i + 1]],
                 'b-', linewidth=1, label=u'Prediction')
+        ax.legend(loc='upper right', fontsize=15)
+        ax.grid()
+        plt.savefig('/Users/stepanletyagin/Desktop/BMSTU/6_semestr/Coursework/python_code/plots/'
+                    + movement_type + '/' + eval_parameter + '/GPP_plot_' + str(i) + '.jpg')
+        plt.cla()
+        plt.clf()
+        plt.close(fig)
+
+
+def gpp_train_plot(series, prediction, series_borders, predict_states_val_num, eval_parameter):
+    for i in range(0, len(series_borders) - 1):  # Number of series
+        # temp_series_l = series_borders[i + 1] - series_borders[i]
+        experiment_data = series.loc[series_borders[i]:series_borders[i + 1] - 1, eval_parameter]
+        time = asarray(series.loc[series_borders[i]:series_borders[i + 1] - 1, 'time'])
+        # test_time_start = temp_series_l - int(predict_states_val_num[i])
+        # test_time = time[test_time_start - 1:temp_series_l - 1]
+        # test_time = time[test_time_start - 3:temp_series_l - 1]
+
+        fig = plt.figure(num=1, figsize=(30, 20), dpi=300, facecolor='w', edgecolor='k')
+        ax = fig.add_subplot()
+        fig.suptitle(g_param1, y=1.2, fontsize=30)
+        ax.set_title('series #' + str(i), fontsize=20)
+        ax.plot(time, experiment_data, 'b-', markersize=5, label=u'Observation')
+        # ax.plot(test_time, prediction[test_time_start - 3:temp_series_l - 1], 'r-', linewidth=1, label=u'Prediction')
+        ax.plot(time, prediction[series_borders[i]:series_borders[i + 1]], 'r-', linewidth=1, label=u'Prediction')
         ax.legend(loc='upper right', fontsize=15)
         ax.grid()
         plt.savefig('/Users/stepanletyagin/Desktop/BMSTU/6_semestr/Coursework/python_code/plots/'
