@@ -22,12 +22,10 @@ series = time_resampling(values)
 # df_to_excel(series)
 # hist(series['angle_knee'], series['angle_hip'])
 
-predicted_values, series_borders, predict_states_val_count = gaussian_process_prediction_spl(series)
-
-gpp_train_plot(series, predicted_values[:, 0], series_borders, predict_states_val_count, g_param1)
-gpp_train_plot(series, predicted_values[:, 1], series_borders, predict_states_val_count, g_param2)
-
-# gpp_dot_plot(data_set, predicted_values, movement_type)
+predicted_values, series_borders, predict_states_val_count, STD, MAX, MAE = gaussian_process_prediction_spl(series)
+gpp_plot(series, predicted_values, series_borders, predict_states_val_count, STD[:, 0], MAX[:, 0], MAE[:, 0], g_param1)
+gpp_plot(series, predicted_values, series_borders, predict_states_val_count, STD[:, 1], MAX[:, 1], MAE[:, 1], g_param2)
+# gpp_dot_plot(series.loc[:, g_param1:g_param2], predicted_values, movement_type)
 
 print("--- %s seconds ---" % (time.time() - start_time))
 

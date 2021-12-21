@@ -1,8 +1,9 @@
 import numpy as np
 from config import *
+from plotting import gpp_plot_distr
 
 
-def gauss_data_spl(series):
+def gauss_data_spl(series, j):
     series_l = len(series)                                      # length of temp series
     train_set_l = int(series_l * test_sample)                   # length of train set
     axis0_train_size = int(g_window * 2 + 2)                    # number of columns of training set
@@ -12,6 +13,8 @@ def gauss_data_spl(series):
     gauss_data = np.empty((axis1_train_size, axis0_train_size), dtype=float)
     train_param1 = np.asarray(series.loc[0:train_set_l, g_param1]).T
     train_param2 = np.asarray(series.loc[0:train_set_l, g_param2]).T
+
+    time = np.asarray(series.loc[0:series_l, 'time'])
 
     for i in range(0, axis1_train_size):
         gauss_data[i, ::2] = train_param1[i:(i + g_window + 1)]   # even values for knee angle
@@ -33,8 +36,7 @@ def gauss_data_spl(series):
     train_set = gauss_data[:, 0:g_window * 2]
     val_set = gauss_data[:, g_window * 2:axis0_train_size]
 
-    # time = np.asarray(series.loc[0:series_l, 'time'])
-    # test_time_start = series_l - len(test_set)
-    # test_time = time[test_time_start - 1:series_l - 1]
+    # gpp_plot_distr(series.loc[:, g_param1], len(train_set[:, 0]), len(val_set[:, 0]), time, g_param1, j)
+    # gpp_plot_distr(series.loc[:, g_param2], len(train_set[:, 1]), len(val_set[:, 1]), time, g_param2, j)
 
     return train_set, val_set, test_set
