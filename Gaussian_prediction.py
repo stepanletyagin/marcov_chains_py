@@ -4,7 +4,8 @@ import numpy as np
 import pandas as pd
 from series_splitting import series_splitting_index
 from gaussian_data import gauss_data_spl
-from errors import standard_error, max_abs
+from errors import standard_error, max_abs, mae
+from plotting import error_dist
 from config import *
 
 
@@ -24,6 +25,7 @@ def gaussian_process_prediction_spl(series):
         temp_series_l = len(temp_series)
         train_set, val_set, test_set = gauss_data_spl(temp_series, i)  # data preparation
 
+        # error_dist(temp_series_l)
         # gp = GaussianProcessRegressor()
         # grid_search = GridSearchCV(gp, param_grid=param_grid)
         # grid_search.fit(train_time, train_set)  # Prediction methods
@@ -32,14 +34,14 @@ def gaussian_process_prediction_spl(series):
         gp.fit(train_set, val_set)  # prediction methods
         prediction = gp.predict(test_set)
 
-        standard_err[i, 0] = standard_error(test_set[:, 0], prediction[:, 0])  # STD
+        standard_err[i, 0] = standard_error(test_set[:, 0], prediction[:, 0])  # std
         standard_err[i, 1] = standard_error(test_set[:, 1], prediction[:, 1])
 
         max_abs_err[i, 0] = max_abs(test_set[:, 0], prediction[:, 0])  # max_abs
         max_abs_err[i, 1] = max_abs(test_set[:, 1], prediction[:, 1])
 
-        mae_err[i, 0] = max_abs(test_set[:, 0], prediction[:, 0])  # max_abs
-        mae_err[i, 1] = max_abs(test_set[:, 1], prediction[:, 1])
+        mae_err[i, 0] = mae(test_set[:, 0], prediction[:, 0])  # mae
+        mae_err[i, 1] = mae(test_set[:, 1], prediction[:, 1])
 
         # filling predicted states
         temp_series.loc[temp_series_l - len(test_set):temp_series_l - 1, g_param1] = prediction[:, 0]
