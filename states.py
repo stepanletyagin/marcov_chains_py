@@ -9,11 +9,11 @@ def create_states(series):
 
     series_states_array = np.zeros((len(idx) - 1, 1)).astype(np.object)   # array of states for all series
 
-    delta_x = (x_max - x_min) / x_points  # Hypercube side
-    delta_y = (y_max - y_min) / y_points
+    delta_x = (x_max - x_min) / g_x_points  # Hypercube side
+    delta_y = (y_max - y_min) / g_y_points
 
     for n in range(0, len(idx) - 1):  # Number of series
-        temp_states = np.zeros((y_points, x_points))  # temp cell array of states
+        temp_states = np.zeros((g_y_points, g_x_points))  # temp cell array of states
         temp_states = temp_states.astype(np.object)
 
         temp_series = series.iloc[idx[n]:idx[n + 1], :]     # temp series for creating states
@@ -31,9 +31,9 @@ def create_states(series):
         data2 = data2.reset_index(drop=True)
         # dot_plot(data1, data2, n)
         for k in range(0, len(data1)):
-            for i in range(0, x_points):
+            for i in range(0, g_x_points):
                 flag = False
-                for j in range(0, y_points):
+                for j in range(0, g_y_points):
                     if (data1[k] > x_min_temp) and (data1[k] < x_max_temp) and (data2[k] > y_min_temp) and (
                             data2[k] < y_max_temp):
                         temp_vec = np.array([[data1[k]], [data2[k]]])

@@ -8,8 +8,11 @@ from errors import standard_error
 from output import df_to_excel
 import time
 from states import create_states
-from frequency import create_freq_matrix
+from frequency import create_freq_matrix, create_freq_tensor
+from hyper_states import hypercube_center_search
 from transitions import create_trans_matrix
+from lags import create_lag_space
+from tensor_operations import space_tensor_size
 from plotting import *
 
 start_time = time.time()  # time of compilation
@@ -47,8 +50,14 @@ Prediction with gaussian process regression
 """
 Prediction with Marcov chains
 """
-states = create_freq_matrix(series)
+states_with_lag_space, dimension_of_lag_space = create_lag_space(series)
+hypercube_centers = hypercube_center_search(states_with_lag_space, dimension_of_lag_space)
+# tens_size = space_tensor_size(len(states_with_lag_space[0, 0][:]))
+# temp_freq_matrix = np.zeros(tens_size, dtype='uint8')
+# freq_tensor = create_freq_tensor(states_with_lag_space)
+
+# states = create_freq_matrix(series)
 # line_plot(series['time'], series['angle_knee'], g_movement_type, 'time', 'knee angle')
-tran = create_trans_matrix(states)
+# transition_matrix = create_trans_matrix(states)
 
 print("--- %s seconds ---" % (time.time() - start_time))

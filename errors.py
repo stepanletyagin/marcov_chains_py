@@ -28,7 +28,7 @@ def mae(experiment_data, predicted_data):
 
     mae = mae / len(predicted_data)
 
-    return max_abs
+    return mae
 
 
 

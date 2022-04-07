@@ -7,8 +7,8 @@ g_movement_type = 'Walking'
 g_param1 = 'angle_knee'
 g_param2 = 'angle_hip'
 
-x_points = 5
-y_points = 9
+g_x_points = 4
+g_y_points = 3
 x_min = 0
 x_max = 80
 y_min = -50
@@ -16,6 +16,8 @@ y_max = 31
 
 eps = 0.000001
 tau = 1 / 10  # Interpolation step
+g_lag_step = 2  # Lag step
+g_lags = 1  # Number of lags
 
 test_sample = 0.8
 g_window = 2
